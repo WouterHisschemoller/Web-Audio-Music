@@ -63,10 +63,9 @@ WH.createChord = function(specs) {
         },
 
         process = function(when, index, length) {
-            var hiFiltFreq = 5000;
             for (var i = 0; i < numVoices; i++) {
-                var pan = 1 - (2 * (i / (numVoices - 1)));
-                createVoice(when + 1, when + 1.9, i, WH.mtof(55 + voices[i].pitch), 600, pan, index);
+                let pan = 1 - (2 * (i / (numVoices - 1)));
+                createVoice(when + (length * (10/16)), when  + (length * (18/16)), i, WH.mtof(55 + voices[i].pitch), 600, pan, index);
             }
         };
 

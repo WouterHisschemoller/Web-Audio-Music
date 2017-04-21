@@ -42,21 +42,21 @@ WH.createFMChord = function(specs) {
             car2Osc.frequency.value = freq / 2;
 
             carGain.gain.setValueAtTime(0, when);
-            carGain.gain.linearRampToValueAtTime(0.05, when + 0.01);
-            carGain.gain.linearRampToValueAtTime(0.03, when + 0.5);
-            carGain.gain.linearRampToValueAtTime(0.05, when + 0.98);
+            carGain.gain.linearRampToValueAtTime(0.03, when + 0.01);
+            carGain.gain.linearRampToValueAtTime(0.015, when + 0.5);
+            carGain.gain.linearRampToValueAtTime(0.03, when + 0.98);
             carGain.gain.exponentialRampToValueAtTime(0.00001, when + 1.0);
 
             modOsc.frequency.setValueAtTime(freq * 2, when);
 
             // second envelope point changes over time
             let envTime = ((loopIndex % 32) / 32) * 0.75;
-            modGain.gain.setValueAtTime(2000, when);
+            modGain.gain.setValueAtTime(1000, when);
             modGain.gain.exponentialRampToValueAtTime(8000, when + 0.25 + envTime);
             modGain.gain.exponentialRampToValueAtTime(0.01, when + 0.5);
             modGain.gain.exponentialRampToValueAtTime(3000, when + 1.0);
 
-            let pan = 1 - (2 * (voiceIndex / (numVoices - 1)));
+            let pan = -1 + (2 * (voiceIndex / (numVoices - 1)));
             voice.panner.pan.setValueAtTime(pan, when);
 
             carOsc.start(when);
@@ -70,7 +70,7 @@ WH.createFMChord = function(specs) {
 
         process = function(when, index, length) {
             for (var i = 0; i < numVoices; i++) {
-                createVoice(when, when + 1, WH.mtof(60 + voices[i].pitch), i, index);
+                createVoice(when + (length * (2/16)), when + (length * (10/16)), WH.mtof(60 + voices[i].pitch), i, index);
             }
         };
 
