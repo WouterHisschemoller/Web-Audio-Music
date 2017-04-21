@@ -53,22 +53,26 @@ document.addEventListener('DOMContentLoaded', function(e) {
         timer = createTimer({
             ctx: ctx
         }),
-        noise = WH.createNoise({
+        // noise = WH.createNoise({
+        //     ctx: ctx
+        // }),
+        // beep = WH.createBeep({
+        //     ctx: ctx
+        // }),
+        // chord = WH.createChord({
+        //     ctx: ctx
+        // }),
+        fmChord = WH.createFMChord({
             ctx: ctx
-        }),
-        beep = WH.createBeep({
-            ctx: ctx
-        }),
-        chord = WH.createChord({
-            ctx: ctx
-        }),
-        kick8 = WH.createKick8({
-            ctx: ctx,
-            noise, noise
         });
+        // kick8 = WH.createKick8({
+        //     ctx: ctx,
+        //     noise, noise
+        // });
 
-    timer.add(chord);
+    // timer.add(chord);
+    timer.add(fmChord);
     // timer.add(beep);
-    timer.add(kick8);
+    // timer.add(kick8);
     timer.start();
 });

@@ -1,12 +1,12 @@
 // A simple FM Cmin7 chord synthesis example.
-const data = [
+var data = [
   {f: 261.626},
   {f: 311.127},
   {f: 391.995},
   {f: 466.164}
 ];
 
-const carGain = context.createGain();
+var carGain = context.createGain();
 carGain.connect(context.destination);
 carGain.gain.setValueAtTime(0, context.currentTime);
 carGain.gain.linearRampToValueAtTime(0.05, context.currentTime + 0.01);
@@ -32,6 +32,7 @@ for (var i = 0; i < data.length; i++) {
   modOsc.frequency.exponentialRampToValueAtTime(data[i].f, context.currentTime + 0.5);
   //modOsc.frequency.exponentialRampToValueAtTime(data[i].f, context.currentTime + 1.0);
   modGain.gain.setValueAtTime(2000, context.currentTime);
+  modGain.gain.exponentialRampToValueAtTime(8000, context.currentTime + 0.25);
   modGain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
   modGain.gain.exponentialRampToValueAtTime(3000, context.currentTime + 1.0);
 
@@ -39,6 +40,7 @@ for (var i = 0; i < data.length; i++) {
   car2Osc.start();
   modOsc.start();
 }
+
 
 
 
