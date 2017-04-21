@@ -6,32 +6,34 @@ window.WH = window.WH || {};
 WH.createFMChord = function(specs) {
     let ctx = specs.ctx,
         voices = [
-            {pitch:  0, modGain: null},
-            {pitch:  3, modGain: null},
-            {pitch:  7, modGain: null},
-            {pitch: 10, modGain: null}],
+            {pitch:  0, modGain: null, panner: null},
+            {pitch:  3, modGain: null, panner: null},
+            {pitch:  7, modGain: null, panner: null},
+            {pitch: 10, modGain: null, panner: null}],
         numVoices = voices.length,
         carGain,
-        modGain,
 
         init = function () {
             carGain = ctx.createGain();
 
             for (var i = 0; i < numVoices; i++) {
                 voices[i].modGain = ctx.createGain();
+                voices[i].panner = ctx.createStereoPanner();
+                voices[i].panner.connect(carGain);
             }
 
             carGain.connect(ctx.destination);
         },
 
         createVoice = function(when, until, freq, voiceIndex, loopIndex) {
-            const modGain = voices[voiceIndex].modGain
+            let voice = voices[voiceIndex],
+                modGain = voice.modGain
                 carOsc = ctx.createOscillator(),
                 car2Osc = ctx.createOscillator(),
                 modOsc = ctx.createOscillator();
 
-            carOsc.connect(carGain);
-            car2Osc.connect(carGain);
+            carOsc.connect(voice.panner);
+            car2Osc.connect(voice.panner);
             modOsc.connect(modGain);
             modGain.connect(carOsc.frequency);
             modGain.connect(car2Osc.frequency);
@@ -53,6 +55,9 @@ WH.createFMChord = function(specs) {
             modGain.gain.exponentialRampToValueAtTime(8000, when + 0.25 + envTime);
             modGain.gain.exponentialRampToValueAtTime(0.01, when + 0.5);
             modGain.gain.exponentialRampToValueAtTime(3000, when + 1.0);
+
+            let pan = 1 - (2 * (voiceIndex / (numVoices - 1)));
+            voice.panner.pan.setValueAtTime(pan, when);
 
             carOsc.start(when);
             car2Osc.start(when);
