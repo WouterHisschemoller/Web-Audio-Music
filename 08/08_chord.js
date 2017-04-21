@@ -5,37 +5,59 @@
 window.WH = window.WH || {};
 
 WH.createChord = function(specs) {
-    var ctx = specs.ctx,
-        chordPitches = [-4, 0, 3, 7, 10],
-        numVoices = chordPitches.length,
+    let ctx = specs.ctx,
+        voices = [{
+            pitch:  0,
+            panner: null,
+            gain: null,
+            filter: null
+        }, {
+            pitch:  3,
+            panner: null,
+            gain: null,
+            filter: null
+        }, {
+            pitch:  7,
+            panner: null,
+            gain: null,
+            filter: null
+        }, {
+            pitch: 10,
+            panner: null,
+            gain: null,
+            filter: null
+        }],
+        numVoices = voices.length,
 
-        createVoice = function(when, until, freq, filtFreq, pan) {
-            var panner = ctx.createStereoPanner();
-            panner.pan.value = pan;
-            panner.connect(ctx.destination);
+        init = function() {
+            for (var i = 0; i < numVoices; i++) {
+                voices[i].panner = ctx.createStereoPanner();
+                voices[i].gain = ctx.createGain();
+                voices[i].filter = ctx.createBiquadFilter();
 
-            var gain = ctx.createGain();
-            gain.gain.value = 0.2;
-            gain.connect(panner);
+                voices[i].panner.connect(ctx.destination);
+                voices[i].gain.connect(voices[i].panner);
+                voices[i].filter.connect(voices[i].gain);
 
-            var filter = ctx.createBiquadFilter();
-            filter.type = 'bandpass';
-            filter.frequency.value = filtFreq;
-            filter.Q.value = 2;
-            filter.connect(gain);
-            filter.frequency.linearRampToValueAtTime(50, until);
+                voices[i].filter.type = 'bandpass';
+                voices[i].filter.Q.value = 4;
+            }
+        },
 
-            var filter2 = ctx.createBiquadFilter();
-            filter2.type = 'bandpass';
-            filter2.frequency.value = filtFreq;
-            filter2.Q.value = 4;
-            filter2.connect(gain);
-            filter2.frequency.linearRampToValueAtTime(50, until);
+        createVoice = function(when, until, voiceIndex, freq, filtFreq, pan, loopIndex) {
+            let voice = voices[voiceIndex];
+            voice.panner.pan.setValueAtTime(pan, when);
+            voice.gain.gain.setValueAtTime(0.3, when);
 
-            var osc = ctx.createOscillator();
+            let envTime = when + ((until - when) * ((loopIndex % 24) / 24));
+            voice.filter.frequency.setValueAtTime(filtFreq, when);
+            voice.filter.frequency.exponentialRampToValueAtTime(4000, envTime);
+            voice.filter.frequency.exponentialRampToValueAtTime(50, until);
+
+            let osc = ctx.createOscillator();
             osc.type = (Math.random() > 0.5) ? 'triangle' : 'sawtooth';
-            osc.frequency.value = freq;
-            osc.connect(filter2);
+            osc.frequency.setValueAtTime(freq, when);
+            osc.connect(voice.filter);
             osc.start(when + Math.random() * 0.01);
             osc.stop(until + Math.random() * 0.15);
         },
@@ -44,15 +66,11 @@ WH.createChord = function(specs) {
             var hiFiltFreq = 5000;
             for (var i = 0; i < numVoices; i++) {
                 var pan = 1 - (2 * (i / (numVoices - 1)));
-                createVoice(when, when + 1, WH.mtof(48 + chordPitches[i]), 400, pan);
-                // createVoice(when + 0.5, when + 1, pitch);
-                createVoice(when + 1.125, when + 1.4, WH.mtof(55 + chordPitches[i]), hiFiltFreq, pan);
-                // createVoice(when + 1.375, when + 1.5, WH.mtof(56 + chordPitches[i]), hiFiltFreq, pan);
-                // createVoice(when + 1.625, when + 1.75, WH.mtof(55 + chordPitches[i]), hiFiltFreq, pan);
-                // var start = index % 2 ? 1.75 : 1.875;
-                // createVoice(when + start, when + start + 0.125, WH.mtof(51 + chordPitches[i]), hiFiltFreq, pan);
+                createVoice(when + 1, when + 1.9, i, WH.mtof(55 + voices[i].pitch), 600, pan, index);
             }
         };
+
+    init();
 
     return {
         process: process
