@@ -2,17 +2,6 @@
 
 window.WH = window.WH || {};
 
-/**
- * Converts a MIDI pitch number to frequency.
- * @param  {Number} midi MIDI pitch (0 ~ 127)
- * @return {Number} Frequency (Hz)
- */
-WH.mtof = function(midi) {
-    if (midi <= -1500) return 0;
-    else if (midi > 1499) return 3.282417553401589e+38;
-    else return 440.0 * Math.pow(2, (Math.floor(midi) - 69) / 12.0);
-};
-
 document.addEventListener('DOMContentLoaded', function(e) {
 
     function createTimer(specs) {
@@ -53,9 +42,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
         timer = createTimer({
             ctx: ctx
         }),
-        // noise = WH.createNoise({
-        //     ctx: ctx
-        // }),
+        utils = WH.createUtils({
+            ctx: ctx
+        }),
         beep = WH.createBeep({
             ctx: ctx
         }),

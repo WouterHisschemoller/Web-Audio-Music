@@ -4,18 +4,18 @@
 
 window.WH = window.WH || {};
 
-WH.createNoise = function(specs) {
+WH.createUtils = function(specs) {
     var ctx = specs.ctx,
         channels = 1,
-        bufferSize = ctx.sampleRate * 2,
-        white,
-        pink,
-        brown,
+        noiseBufferSize = ctx.sampleRate * 2,
+        whiteNoise,
+        pinkNoise,
+        brownNoise,
 
         init = function() {
-            white = createWhiteNoise();
-            pink = createPinkNoise();
-            brown = createBrownNoise();
+            whiteNoise = createWhiteNoise();
+            pinkNoise = createPinkNoise();
+            brownNoise = createBrownNoise();
         },
 
         /**
@@ -23,11 +23,11 @@ WH.createNoise = function(specs) {
          * @return {object} AudioBuffer of white noise.
          */
         createWhiteNoise = function() {
-            var buffer = ctx.createBuffer(channels, bufferSize, ctx.sampleRate),
+            var buffer = ctx.createBuffer(channels, noiseBufferSize, ctx.sampleRate),
                 bufferChannels = buffer.getChannelData(0),
                 i;
 
-            for (i = 0; i < bufferSize; i++) {
+            for (i = 0; i < noiseBufferSize; i++) {
                 bufferChannels[i] = Math.random() * 2 - 1;
             }
 
@@ -39,12 +39,12 @@ WH.createNoise = function(specs) {
          * @return {object} AudioBuffer of pink noise.
          */
         createPinkNoise = function() {
-            var buffer = ctx.createBuffer(channels, bufferSize, ctx.sampleRate),
+            var buffer = ctx.createBuffer(channels, noiseBufferSize, ctx.sampleRate),
                 bufferChannels = buffer.getChannelData(0),
                 white, i, b0, b1, b2, b3, b4, b5, b6;
 
             b0 = b1 = b2 = b3 = b4 = b5 = b6 = 0.0;
-            for (i = 0; i < bufferSize; i++) {
+            for (i = 0; i < noiseBufferSize; i++) {
                 white = Math.random() * 2 - 1;
                 b0 = 0.99886 * b0 + white * 0.0555179;
                 b1 = 0.99332 * b1 + white * 0.0750759;
@@ -65,12 +65,12 @@ WH.createNoise = function(specs) {
          * @return {object} AudioBuffer of brown noise.
          */
         createBrownNoise = function() {
-            var buffer = ctx.createBuffer(channels, bufferSize, ctx.sampleRate),
+            var buffer = ctx.createBuffer(channels, noiseBufferSize, ctx.sampleRate),
                 bufferChannels = buffer.getChannelData(0),
                 i, white,
                 lastOut = 0.0;
 
-            for (i = 0; i < bufferSize; i++) {
+            for (i = 0; i < noiseBufferSize; i++) {
                 white = Math.random() * 2 - 1;
                 bufferChannels[i] = (lastOut + (0.02 * white)) / 1.02;
                 lastOut = bufferChannels[i];
@@ -80,23 +80,33 @@ WH.createNoise = function(specs) {
             return buffer;
         },
 
-        getWhite = function() {
-            return white;
+        getWhiteNoise = function() {
+            return whiteNoise;
         },
 
-        getPink = function() {
-            return pink;
+        getPinkNoise = function() {
+            return pinkNoise;
         },
 
-        getBrown = function() {
-            return brown;
+        getBrownNoise = function() {
+            return brownNoise;
+        },
+
+        /**
+         * Converts a MIDI pitch number to frequency.
+         * @param  {Number} midi MIDI pitch (0 ~ 127)
+         * @return {Number} Frequency (Hz)
+         */
+        mtof = function(midi) {
+            if (midi <= -1500) return 0;
+            else if (midi > 1499) return 3.282417553401589e+38;
+            else return 440.0 * Math.pow(2, (Math.floor(midi) - 69) / 12.0);
         };
 
     init();
 
-    return {
-        getWhite: getWhite,
-        getPink: getPink,
-        getBrown: getBrown
-    };
-}
+    WH.getWhiteNoise = getWhiteNoise;
+    WH.getPinkNoise = getPinkNoise;
+    WH.getBrownNoise = getBrownNoise;
+    WH.mtof = mtof;
+};
