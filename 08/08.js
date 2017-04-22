@@ -62,6 +62,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
         chord = WH.createChord({
             ctx: ctx
         }),
+        click = WH.createClick({
+            ctx: ctx
+        }),
         fmChord = WH.createFMChord({
             ctx: ctx
         }),
@@ -69,9 +72,10 @@ document.addEventListener('DOMContentLoaded', function(e) {
             ctx: ctx
         });
 
-    timer.add(chord);
-    timer.add(fmChord);
     timer.add(beep);
+    timer.add(chord);
+    timer.add(click);
+    timer.add(fmChord);
     timer.add(kick8);
     timer.start();
 });
