@@ -93,6 +93,30 @@ WH.createUtils = function(specs) {
         },
 
         /**
+         * Create a basic reverb impulse response buffer,
+         * which is logarithmic decaying noise.
+         * @see http://stackoverflow.com/questions/34482319/web-audio-api-how-do-i-add-a-working-convolver
+         * @param {Number} duration [description]
+         * @param {Number} decay    [description]
+         * @param  {[type]} reverse  [description]
+         * @return {[type]}          [description]
+         */
+        getImpulseResponse = function(duration, decay, reverse) {
+            let length = ctx.sampleRate * duration,
+                impulse = ctx.createBuffer(2, length, ctx.sampleRate),
+                impulseL = impulse.getChannelData(0),
+                impulseR = impulse.getChannelData(1);
+
+            decay = decay || 2.0;
+            for (let i = 0; i < length; i++) {
+              let n = reverse ? length - i : i;
+              impulseL[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
+              impulseR[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
+            }
+            return impulse;
+        },
+
+        /**
          * Converts a MIDI pitch number to frequency.
          * @param  {Number} midi MIDI pitch (0 ~ 127)
          * @return {Number} Frequency (Hz)
@@ -108,5 +132,6 @@ WH.createUtils = function(specs) {
     WH.getWhiteNoise = getWhiteNoise;
     WH.getPinkNoise = getPinkNoise;
     WH.getBrownNoise = getBrownNoise;
+    WH.getImpulseResponse = getImpulseResponse;
     WH.mtof = mtof;
 };

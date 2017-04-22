@@ -28,13 +28,25 @@ WH.createChord = function(specs) {
             filter: null
         }],
         numVoices = voices.length,
+        convolver,
+        convGain,
 
         init = function() {
+
+            convolver = ctx.createConvolver();
+            convolver.buffer = WH.getImpulseResponse(2, 10);
+
+            convGain = ctx.createGain();
+            convGain.gain.value = 0.3;
+
+            convolver.connect(convGain).connect(ctx.destination);
+
             for (var i = 0; i < numVoices; i++) {
                 voices[i].panner = ctx.createStereoPanner();
                 voices[i].gain = ctx.createGain();
                 voices[i].filter = ctx.createBiquadFilter();
 
+                voices[i].panner.connect(convolver);
                 voices[i].panner.connect(ctx.destination);
                 voices[i].gain.connect(voices[i].panner);
                 voices[i].filter.connect(voices[i].gain);
