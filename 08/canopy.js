@@ -1,3 +1,21 @@
+// One sample click sound.
+let ctx = context,
+	when = ctx.currentTime;
+
+let bufferSize = 100,
+    buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate),
+    bufferChannel = buffer.getChannelData(0);
+for (i = 0; i < bufferSize; i++) {
+	bufferChannel[i] = (i > 10 && i < 12) ? 1 : 0;
+}
+
+let src = ctx.createBufferSource();
+src.buffer = buffer;
+src.connect(ctx.destination);
+src.start(when);
+
+
+
 // A simple FM Cmin7 chord synthesis example.
 var data = [
   {f: 261.626},
