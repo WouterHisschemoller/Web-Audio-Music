@@ -39,7 +39,7 @@ WH.createChord = function(specs) {
                 voices[i].gain.connect(voices[i].panner);
                 voices[i].filter.connect(voices[i].gain);
 
-                voices[i].filter.type = 'bandpass';
+                voices[i].filter.type = 'highpass';
                 voices[i].filter.Q.value = 4;
             }
         },
@@ -52,7 +52,7 @@ WH.createChord = function(specs) {
             let envTime = when + ((until - when) * ((loopIndex % 24) / 24));
             voice.filter.frequency.setValueAtTime(filtFreq, when);
             voice.filter.frequency.exponentialRampToValueAtTime(4000, envTime);
-            voice.filter.frequency.exponentialRampToValueAtTime(50, until);
+            voice.filter.frequency.exponentialRampToValueAtTime(10000, until);
 
             let osc = ctx.createOscillator();
             osc.type = (Math.random() > 0.5) ? 'triangle' : 'sawtooth';
@@ -65,7 +65,10 @@ WH.createChord = function(specs) {
         process = function(when, index, length) {
             for (var i = 0; i < numVoices; i++) {
                 let pan = 1 - (2 * (i / (numVoices - 1)));
-                createVoice(when + (length * (10/16)), when  + (length * (18/16)), i, WH.mtof(55 + voices[i].pitch), 600, pan, index);
+                createVoice(
+                    when + (length * (12/16)),
+                    when + (length * (13/16)), i,
+                    WH.mtof(55 + voices[i].pitch), 20000, pan, index);
             }
         };
 

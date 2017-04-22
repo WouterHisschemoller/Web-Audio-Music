@@ -56,9 +56,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
         // noise = WH.createNoise({
         //     ctx: ctx
         // }),
-        // beep = WH.createBeep({
-        //     ctx: ctx
-        // }),
+        beep = WH.createBeep({
+            ctx: ctx
+        }),
         chord = WH.createChord({
             ctx: ctx
         }),
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
     timer.add(chord);
     timer.add(fmChord);
-    // timer.add(beep);
+    timer.add(beep);
     timer.add(kick8);
     timer.start();
 });

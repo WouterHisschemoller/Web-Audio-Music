@@ -33,7 +33,7 @@ WH.createBeep = function(specs) {
             gain.gain.exponentialRampToValueAtTime(0.001, when + 0.12);
 
             if (Math.random() > 0.5) {
-                when += (length * (2/16));
+                when += (length * (4/16));
                 osc.frequency.setValueAtTime(WH.mtof(36), when);
                 gain.gain.setValueAtTime(0.001, when);
                 gain.gain.exponentialRampToValueAtTime(0.5, when + 0.008);

@@ -36,10 +36,10 @@ WH.createKick8 = function(specs) {
         },
 
         process = function(when, index, length) {
-            createVoice(when, 0.5);
+            createVoice(when + (length * (0/16)), 0.5);
             createVoice(when + (length * (6/16)), 1.5);
-            createVoice(when + (length * (10/16)), 0.5);
-            createVoice(when + (length * (14/16)), 0.5);
+            // createVoice(when + (length * (10/16)), 0.5);
+            // createVoice(when + (length * (14/16)), 0.5);
         };
 
     return {
