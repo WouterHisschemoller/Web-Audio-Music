@@ -75,7 +75,7 @@ WH.createChord = function(specs) {
         },
 
         process = function(when, index, length) {
-            if (index >= 32 && index < 128) {
+            if (index >= 32 - 16 && index < 128) {
                 for (var i = 0; i < numVoices; i++) {
                     let pan = 1 - (2 * (i / (numVoices - 1)));
                     createVoice(

@@ -50,13 +50,18 @@ WH.createFMChord = function(specs) {
             modOsc.frequency.setValueAtTime(freq * 2, when);
 
             // second envelope point changes over time
-            let envTime = ((loopIndex % 32) / 32) * 0.75;
-            modGain.gain.setValueAtTime(1000, when);
+            let triangle16LFO = ((loopIndex % 32) / 32 >= 0.5) ? ((16 - (loopIndex % 16)) / 16) : ((loopIndex % 16) / 16),
+                triangle24LFO = ((loopIndex % 48) / 48 >= 0.5) ? ((24 - (loopIndex % 24)) / 24) : ((loopIndex % 24) / 24),
+                envTime = ((loopIndex % 32) / 32) * 0.75,
+                startLevel = 1 + (triangle24LFO * 1000),
+                endLevel = 3000 - (triangle24LFO * 2500);
+
+            modGain.gain.setValueAtTime(startLevel, when);
             modGain.gain.exponentialRampToValueAtTime(8000, when + 0.25 + envTime);
             modGain.gain.exponentialRampToValueAtTime(0.01, when + 0.5);
-            modGain.gain.exponentialRampToValueAtTime(3000, when + 1.0);
+            modGain.gain.exponentialRampToValueAtTime(endLevel, when + 1.0);
 
-            let pan = -1 + (2 * (voiceIndex / (numVoices - 1)));
+            let pan = 1 - (2 * (voiceIndex / (numVoices - 1))); // -1 + (2 * (voiceIndex / (numVoices - 1)));
             voice.panner.pan.setValueAtTime(pan, when);
 
             carOsc.start(when);
@@ -74,7 +79,7 @@ WH.createFMChord = function(specs) {
             }
 
             for (var i = 0; i < numVoices; i++) {
-                if (index >= 64 && index < 96) {
+                if (index >= 64 && index < 96 - 16) {
                     createVoice(when + (length * (2/16)), when + (length * (4/16)), WH.mtof(60 + voices[i].pitch), i, index);
                     createVoice(when + (length * (4/16)), when + (length * (5/16)), WH.mtof(60 + voices[i].pitch), i, index);
                 } else {

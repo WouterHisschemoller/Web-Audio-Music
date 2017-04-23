@@ -37,6 +37,9 @@ WH.createKick8 = function(specs) {
 
         process = function(when, index, length) {
             if (index >= 32 && index < 128) {
+                if (index >= 80 && index < 96 ) {
+                    return;
+                }    
                 createVoice(when + (length * (0/16)), 0.5);
                 createVoice(when + (length * (6/16)), 1.5);
             }
