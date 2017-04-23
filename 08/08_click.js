@@ -8,7 +8,7 @@ WH.createClick = function(specs) {
     var ctx = specs.ctx,
         panner,
         buffer1,
-        buffer10
+        buffer6
 
         init = function() {
             let bufferSize = 100;
@@ -19,10 +19,10 @@ WH.createClick = function(specs) {
             	bufferChannel[i] = (i > 10 && i < 12) ? 1 : 0;
             }
 
-            buffer10 = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            bufferChannel = buffer10.getChannelData(0);
+            buffer6 = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            bufferChannel = buffer6.getChannelData(0);
             for (i = 0; i < bufferSize; i++) {
-            	bufferChannel[i] = (i > 10 && i < 22) ? 1 : 0;
+            	bufferChannel[i] = (i > 10 && i < 17) ? 1 : 0;
             }
 
             panner = ctx.createStereoPanner();
@@ -31,7 +31,7 @@ WH.createClick = function(specs) {
 
         createVoice = function(when, buffer) {
 
-            let pan = (buffer === buffer10) ? -0.7 : 0.2 + (Math.random() * 0.5);
+            let pan = (buffer === buffer6) ? -0.7 : 0.2 + (Math.random() * 0.5);
             panner.pan.setValueAtTime(pan, when);
 
             let src = ctx.createBufferSource();
@@ -48,7 +48,7 @@ WH.createClick = function(specs) {
                 return;
             }
 
-            createVoice(when + (length * (5/16)), buffer10);
+            createVoice(when + (length * (5/16)), buffer6);
 
             createVoice(when + (length * (11/16)), buffer1);
             createVoice(when + (length * (11.5/16)), buffer1);
