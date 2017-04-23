@@ -21,11 +21,7 @@ WH.createBeep = function(specs) {
             osc.start();
         },
 
-        process = function(when, index, length) {
-            playBeep(when + (length / 2), length);
-        },
-
-        playBeep = function(when, length) {
+        playBeep = function(when, length, loopIndex) {
             osc.frequency.setValueAtTime(WH.mtof(36), when);
             gain.gain.setValueAtTime(0.001, when);
             gain.gain.exponentialRampToValueAtTime(0.5, when + 0.008);
@@ -34,6 +30,15 @@ WH.createBeep = function(specs) {
 
             if (Math.random() > 0.5) {
                 when += (length * (4/16));
+                osc.frequency.setValueAtTime(WH.mtof(36), when);
+                gain.gain.setValueAtTime(0.001, when);
+                gain.gain.exponentialRampToValueAtTime(0.5, when + 0.008);
+                gain.gain.setValueAtTime(0.5, when + 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.001, when + 0.12);
+            }
+
+            if (loopIndex >= 64 && loopIndex < 96) {
+                when += (length * (1/16));
                 osc.frequency.setValueAtTime(WH.mtof(36), when);
                 gain.gain.setValueAtTime(0.001, when);
                 gain.gain.exponentialRampToValueAtTime(0.5, when + 0.008);
@@ -50,6 +55,12 @@ WH.createBeep = function(specs) {
                 gain.gain.exponentialRampToValueAtTime(0.01, hiBeepWhen + 0.008);
                 gain.gain.setValueAtTime(0.01, hiBeepWhen + 0.3);
                 gain.gain.exponentialRampToValueAtTime(0.0000001, hiBeepWhen + 0.32);
+            }
+        },
+
+        process = function(when, index, length) {
+            if (index >= 32 && index < 128) {
+                playBeep(when + (length / 2), length, index);
             }
         };
 

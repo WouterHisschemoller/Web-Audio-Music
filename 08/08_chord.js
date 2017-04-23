@@ -75,12 +75,14 @@ WH.createChord = function(specs) {
         },
 
         process = function(when, index, length) {
-            for (var i = 0; i < numVoices; i++) {
-                let pan = 1 - (2 * (i / (numVoices - 1)));
-                createVoice(
-                    when + (length * (12/16)),
-                    when + (length * (13/16)), i,
-                    WH.mtof(55 + voices[i].pitch), 20000, pan, index);
+            if (index >= 32 && index < 128) {
+                for (var i = 0; i < numVoices; i++) {
+                    let pan = 1 - (2 * (i / (numVoices - 1)));
+                    createVoice(
+                        when + (length * (12/16)),
+                        when + (length * (13/16)), i,
+                        WH.mtof(55 + voices[i].pitch), 20000, pan, index);
+                }
             }
         };
 

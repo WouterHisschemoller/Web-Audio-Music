@@ -69,8 +69,17 @@ WH.createFMChord = function(specs) {
         },
 
         process = function(when, index, length) {
+            if (index >= 128) {
+                return;
+            }
+
             for (var i = 0; i < numVoices; i++) {
-                createVoice(when + (length * (2/16)), when + (length * (10/16)), WH.mtof(60 + voices[i].pitch), i, index);
+                if (index >= 64 && index < 96) {
+                    createVoice(when + (length * (2/16)), when + (length * (4/16)), WH.mtof(60 + voices[i].pitch), i, index);
+                    createVoice(when + (length * (4/16)), when + (length * (5/16)), WH.mtof(60 + voices[i].pitch), i, index);
+                } else {
+                    createVoice(when + (length * (2/16)), when + (length * (10/16)), WH.mtof(60 + voices[i].pitch), i, index);
+                }
             }
         };
 

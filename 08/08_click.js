@@ -41,6 +41,10 @@ WH.createClick = function(specs) {
         },
 
         process = function(when, index, length) {
+            if (index >= 128) {
+                return;
+            }
+            
             createVoice(when + (length * (5/16)), buffer10);
 
             createVoice(when + (length * (11/16)), buffer1);
