@@ -16,13 +16,13 @@ WH.createClick = function(specs) {
             buffer1 = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
             let bufferChannel = buffer1.getChannelData(0);
             for (i = 0; i < bufferSize; i++) {
-            	bufferChannel[i] = (i > 10 && i < 12) ? 1 : 0;
+            	bufferChannel[i] = (i > 10 && i < 12) ? 0.8 : 0;
             }
 
             buffer6 = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
             bufferChannel = buffer6.getChannelData(0);
             for (i = 0; i < bufferSize; i++) {
-            	bufferChannel[i] = (i > 10 && i < 17) ? 1 : 0;
+            	bufferChannel[i] = (i > 10 && i < 17) ? 0.5 : 0;
             }
 
             panner = ctx.createStereoPanner();
