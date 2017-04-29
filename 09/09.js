@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
     function createTimer(specs) {
         var ctx = specs.ctx,
             index = 0,
-            length = 2,
+            length = 1.8,
             next = 0,
             processors = [],
 
@@ -38,13 +38,17 @@ document.addEventListener('DOMContentLoaded', function(e) {
         }
     };
 
-    var ctx = new AudioContext(),
+    let ctx = new AudioContext(),
         timer = createTimer({
             ctx: ctx
         }),
         utils = WH.createUtils({
             ctx: ctx
+        }),
+        fmKick = WH.createFMKick({
+            ctx: ctx
         });
 
+    timer.add(fmKick);
     timer.start();
 });
