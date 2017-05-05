@@ -15,9 +15,12 @@ WH.createFMKick = function(specs) {
                 m2Osc = ctx.createOscillator(),
                 m2Gain = ctx.createGain();
 
-            cOsc.connect(cGain).connect(ctx.destination);
-            m1Osc.connect(m1Gain).connect(cOsc.frequency);
-            m2Osc.connect(m2Gain).connect(ctx.destination);
+            cOsc.connect(cGain);
+            cGain.connect(ctx.destination);
+            m1Osc.connect(m1Gain);
+            m1Gain.connect(cOsc.frequency);
+            m2Osc.connect(m2Gain);
+            m2Gain.connect(ctx.destination);
 
             cOsc.frequency.setValueAtTime(49.0, when);
             cGain.gain.setValueAtTime(1, when);
