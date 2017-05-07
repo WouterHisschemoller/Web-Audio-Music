@@ -29,3 +29,22 @@ m2Gain.gain.setValueAtTime(0, when + 0.0001);
 cOsc.start(when);
 m1Osc.start(when);
 m2Osc.start(when);
+
+
+
+// Wave start bug Chrome and Safari
+var gain = context.createGain();
+gain.gain.value = 0.5;
+gain.connect(context.destination);
+
+var osc = new OscillatorNode(context);
+osc.frequency.setValueAtTime(49.0, 0);
+osc.connect(gain);
+osc.start(0);
+osc.stop(0.25);
+
+var osc2 = new OscillatorNode(context);
+osc2.frequency.setValueAtTime(49.0, 0.5);
+osc2.connect(gain);
+osc2.start(0.5);
+osc2.stop(0.75);

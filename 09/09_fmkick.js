@@ -6,6 +6,14 @@ window.WH = window.WH || {};
 
 WH.createFMKick = function(specs) {
     var ctx = specs.ctx,
+        cOscBuffer,
+
+        init = function() {
+            // record the carrier oscillator and play it as a sample,
+            // because scheduled oscillator start will not play the
+            // waveform from its start point.
+            
+        },
 
         createVoice = function(when) {
             let cOsc = ctx.createOscillator(),
