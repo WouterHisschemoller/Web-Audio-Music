@@ -9,62 +9,74 @@ WH.createFMKick = function(specs) {
         cOscBuffer,
 
         init = function() {
-            // record the carrier oscillator and play it as a sample,
+            // record the kick sound and play it as a sample,
             // because scheduled oscillator start will not play the
             // waveform from its start point.
-            
-        },
+            let when = ctx.currentTime,
+                numChannels = 1,
+                length = 4 * ctx.sampleRate,
+                offlineCtx = new OfflineAudioContext(numChannels, length, ctx.sampleRate),
+                cOsc = offlineCtx.createOscillator(),
+                m1Osc = offlineCtx.createOscillator(),
+                m1Gain = offlineCtx.createGain(),
+                m2Osc = offlineCtx.createOscillator(),
+                m2Gain = offlineCtx.createGain();
 
-        createVoice = function(when) {
-            let cOsc = ctx.createOscillator(),
-                cGain = ctx.createGain(),
-                m1Osc = ctx.createOscillator(),
-                m1Gain = ctx.createGain(),
-                m2Osc = ctx.createOscillator(),
-                m2Gain = ctx.createGain();
-
-            cOsc.connect(cGain);
-            cGain.connect(ctx.destination);
+            cOsc.connect(offlineCtx.destination);
             m1Osc.connect(m1Gain);
             m1Gain.connect(cOsc.frequency);
             m2Osc.connect(m2Gain);
-            m2Gain.connect(ctx.destination);
+            m2Gain.connect(offlineCtx.destination);
 
             cOsc.frequency.setValueAtTime(49.0, when);
-            cGain.gain.setValueAtTime(1, when);
-            cGain.gain.exponentialRampToValueAtTime(0.001, when + 1.2);
 
             m1Osc.frequency.setValueAtTime(24.5, when);
-            m1Gain.gain.setValueAtTime(5000, when);
+            m1Gain.gain.setValueAtTime(3000, when);
             m1Gain.gain.exponentialRampToValueAtTime(0.0001, when + 0.01);
 
             m2Osc.type = 'sawtooth';
-            m2Osc.frequency.setValueAtTime(166, when);
-            m2Gain.gain.setValueAtTime(6, when);
+            m2Osc.frequency.setValueAtTime(98, when);
+            m2Gain.gain.setValueAtTime(4, when);
             m2Gain.gain.setValueAtTime(0, when + 0.0001);
 
             cOsc.start(when);
             m1Osc.start(when);
             m2Osc.start(when);
 
-            cOsc.stop(when + 1.5);
+            offlineCtx.startRendering().then(function(renderedBuffer) {
+                cOscBuffer = renderedBuffer;
+            });
+        },
 
-            cOsc.onended = function(e) {
-                cGain.disconnect();
-                cGain = null;
-                m1Osc.stop();
-                m1Gain.disconnect();
-                m1Gain = null;
-                m2Osc.stop();
-                m2Gain.disconnect();
-                m2Gain = null;
+        createVoice = function(when) {
+            let osc = ctx.createBufferSource(),
+                gain = ctx.createGain();
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.buffer = cOscBuffer;
+            osc.playbackRate.value = 1.0;
+            gain.gain.setValueAtTime(1, when);
+            gain.gain.exponentialRampToValueAtTime(0.00001, when + 1.2);
+
+            osc.start(when);
+            osc.stop(when + 1.5);
+
+            osc.onended = function(e) {
+                gain.disconnect();
+                gain = null;
             };
         },
 
         process = function(when, index, length) {
-            createVoice(when + (length * (0/16)));
-            createVoice(when + (length * (8/16)));
+            if (cOscBuffer) {
+                createVoice(when + (length * (0/16)));
+                createVoice(when + (length * (8/16)));
+            }
         };
+
+    init();
 
     return {
         process: process
