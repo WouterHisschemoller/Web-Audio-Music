@@ -38,11 +38,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
         }
     };
 
-    if (window.hasOwnProperty('webkitAudioContext')) {
-        window.AudioContext = webkitAudioContext;
-    }
-
-    let ctx = new AudioContext(),
+    let ctx = new (window.AudioContext || window.webkitAudioContext)(),
         timer = createTimer({
             ctx: ctx
         }),
