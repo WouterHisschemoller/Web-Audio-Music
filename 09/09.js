@@ -47,8 +47,12 @@ document.addEventListener('DOMContentLoaded', function(e) {
         }),
         fmKick = WH.createFMKick({
             ctx: ctx
+        }),
+        fmTom = WH.createFMTom({
+            ctx: ctx
         });
 
     timer.add(fmKick);
+    timer.add(fmTom);
     timer.start();
 });

@@ -33,12 +33,12 @@ filter2.Q.value = 3;
 
 gain.gain.setValueAtTime(10, when);
 
-cOsc.frequency.setValueAtTime(240.0, when);
+cOsc.frequency.setValueAtTime(199.0 * 1.2, when);
 cOsc.frequency.exponentialRampToValueAtTime(199.0, when + 0.003);
 cGain.gain.setValueAtTime(0.7, when);
 cGain.gain.exponentialRampToValueAtTime(0.0001, when + 0.007);
 
-m1Osc.frequency.setValueAtTime(2600.0, when);
+m1Osc.frequency.setValueAtTime(1840.0 * 1.2, when);
 m1Osc.frequency.exponentialRampToValueAtTime(1840.0, when + 0.003);
 m1Gain.gain.setValueAtTime(15000, when);
 m1Gain.gain.exponentialRampToValueAtTime(0.0001, when + 0.007);
