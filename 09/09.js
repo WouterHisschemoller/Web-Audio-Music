@@ -23,9 +23,11 @@ document.addEventListener('DOMContentLoaded', function(e) {
                 requestAnimationFrame(run);
             },
 
-            start = function() {
-                next = ctx.currentTime;
-                run();
+            start = function(delay = 0) {
+                setTimeout(function() {
+                    next = ctx.currentTime;
+                    run();
+                }, delay);
             },
 
             add = function(processor) {
@@ -54,5 +56,5 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
     timer.add(fmKick);
     timer.add(fmTom);
-    timer.start();
+    timer.start(100);
 });
