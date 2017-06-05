@@ -129,9 +129,11 @@ WH.createUtils = function(specs) {
 
     init();
 
-    WH.getWhiteNoise = getWhiteNoise;
-    WH.getPinkNoise = getPinkNoise;
-    WH.getBrownNoise = getBrownNoise;
-    WH.getImpulseResponse = getImpulseResponse;
-    WH.mtof = mtof;
+    return {
+        getWhiteNoise: getWhiteNoise,
+        getPinkNoise: getPinkNoise,
+        getBrownNoise: getBrownNoise,
+        getImpulseResponse: getImpulseResponse,
+        mtof: mtof
+    };
 };
