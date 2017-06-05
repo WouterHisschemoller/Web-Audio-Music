@@ -52,9 +52,14 @@ document.addEventListener('DOMContentLoaded', function(e) {
         }),
         fmTom = WH.createFMTom({
             ctx: ctx
+        }),
+        noise = WH.createNoise({
+            ctx: ctx,
+            utils: utils
         });
-
+        
     timer.add(fmKick);
     timer.add(fmTom);
+    timer.add(noise);
     timer.start(100);
 });
